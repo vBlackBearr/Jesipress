@@ -34,10 +34,9 @@ export const getObjetoByCode = async (codigo) => {
     try {
         const objetosCol = collection(db, 'objetos');
         const querySnapshot = await getDocs(query(objetosCol, where('codigo', '==', codigo)));
-        // alert(querySnapshot.docs[0].data().nombre)
-        // if (querySnapshot.empty) {
-        //     throw new Error('No se encontró ningún objeto con el código proporcionado.');
-        // }
+        if (querySnapshot.empty) {
+            throw new Error('No se encontró ningún objeto con el código proporcionado.');
+        }
 
         const objeto = querySnapshot.docs[0].data();
         // Agregar el ID al objeto
@@ -51,7 +50,7 @@ export const getObjetoByCode = async (codigo) => {
 };
 
 
-export const getObjetoById  = async (objetoId): Promise<object> => {
+export const getObjetoById  = async (objetoId)=> {
     try {
         const objetoRef = doc(db, 'objetos', objetoId);
         const objetoDoc = await getDoc(objetoRef);
@@ -144,7 +143,7 @@ export const getAllPrestamos = async () => {
     }
 };
 
-export const getPrestamoByObjectIdWhereDevueltoIsFalseFalse = async (object_id) => {
+export const getPrestamoByObjectIdWhereDevueltoIsFalse = async (object_id) => {
     try {
         const prestamosCol = collection(db, 'prestamos');
         let prestamosSnapshot;

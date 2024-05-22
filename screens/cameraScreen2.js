@@ -1,11 +1,12 @@
-import React, {useState} from 'react';
-import {Text, View, StyleSheet, Button, TouchableOpacity} from 'react-native';
-import {BarCodeScanner} from 'expo-barcode-scanner';
+import React, { useState } from 'react';
+import { Text, View, StyleSheet, Button, TouchableOpacity } from 'react-native';
+// import { BarCodeScanner } from 'expo-barcode-scanner';
+import { CameraView } from 'expo-camera'
 import Modal from 'react-native-modal';
-import {createPrestamo} from "../src/REST_METHODS";
-const {format} = require('date-fns');
+import { createPrestamo } from "../src/REST_METHODS";
+const { format } = require('date-fns');
 
-export default function CameraScreen2({navigation, route}) {
+export default function CameraScreen2({ navigation, route }) {
     const [scanned, setScanned] = useState(false);
     const [isModalVisible, setModalVisible] = useState(false);
     const [mensaje, setMensaje] = useState('');
@@ -21,9 +22,9 @@ export default function CameraScreen2({navigation, route}) {
         request
         toggleModal();
     };
-    
 
-    const request = ({dataBarCode}) => {
+
+    const request = ({ dataBarCode }) => {
         const fechaHoraActual = format(new Date(), 'yyyy-MM-dd HH:mm:ss');
         const data = {
             objeto_id: route.params.idObjeto,
@@ -35,26 +36,33 @@ export default function CameraScreen2({navigation, route}) {
         });
     };
 
-    const handleBarCodeScanned = ({type, data}) => {
-            if (type === "org.iso.Code39") {
-                setScanned(true);
-                request({dataBarCode: data});
-                alert(`Registro Exitoso con el numero de control: ${data}`);
-                navigation.navigate('HomeScreen');
-            } else {
-                alert(`El codigo no pertenece a una credencial.`);
-            }
+    const handleBarCodeScanned = ({ type, data }) => {
+        if (type === "org.iso.Code39") {
+            setScanned(true);
+            request({ dataBarCode: data });
+            alert(`Registro Exitoso con el numero de control: ${data}`);
+            navigation.navigate('HomeScreen');
+        } else {
+            alert(`El codigo no pertenece a una credencial.`);
+        }
         setScanned(true);
     };
 
     return (
         <View style={styles.container}>
-            <BarCodeScanner
+            {/* <BarCodeScanner
                 onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
                 style={StyleSheet.absoluteFillObject}
-            />
+            /> */}
+            <CameraView style={styles.cameraView} enableTorch={flashState}
+                barcodeScannerSettings={{
+                    barcodeTypes: ["qr", "code39"],
+                }}
+                onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}>
+                {scanned && <Button title={'Da click para volver a escanear'} onPress={() => setScanned(false)} />}
+            </CameraView>
             <Modal isVisible={isModalVisible}>
-                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                     <Text>Este es un mensaje emergente.</Text>
                     <TouchableOpacity onPress={handleAccept}>
                         <Text>Aceptar</Text>
@@ -64,7 +72,7 @@ export default function CameraScreen2({navigation, route}) {
                     </TouchableOpacity>
                 </View>
             </Modal>
-            {scanned && <Button title={'Da click para volver a escanear'} onPress={() => setScanned(false)}/>}
+            {scanned && <Button title={'Da click para volver a escanear'} onPress={() => setScanned(false)} />}
         </View>
     );
 }
