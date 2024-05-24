@@ -1,13 +1,7 @@
 import axios from 'axios';
-import { API_URL } from "../API_URL";
 import { format } from "date-fns";
 import { collection, getDocs, getDoc, updateDoc, doc, deleteDoc, addDoc, setDoc, query, where } from 'firebase/firestore/lite';
 import db from '../database/firebase'
-
-const OBJETOS_API_BASE_URL = API_URL + '/objetos';
-
-const PRESTAMOS_API_BASE_URL = API_URL + '/prestamos';
-
 
 /*
 *      ************************
@@ -225,15 +219,15 @@ export const updatePrestamoById = async (prestamoId, prestamoData) => {
     }
 };
 
-export const registroDevolucionPrestamo = async (codigoObj, data) => {
-    try {
-        const response = await axios.put(`${PRESTAMOS_API_BASE_URL}/devolucion/${codigoObj}`, data);
-        return response.data;
-    } catch (error) {
-        console.error('Error en la solicitud PUT de devolucion de préstamo:', error);
-        throw error;
-    }
-}
+// export const registroDevolucionPrestamo = async (codigoObj, data) => {
+//     try {
+//         const response = await axios.put(`${PRESTAMOS_API_BASE_URL}/devolucion/${codigoObj}`, data);
+//         return response.data;
+//     } catch (error) {
+//         console.error('Error en la solicitud PUT de devolucion de préstamo:', error);
+//         throw error;
+//     }
+// }
 
 /*
 export const llegadaPrestamoById = async (objetoId ) => {

@@ -3,18 +3,8 @@ import { Text, View, StyleSheet, Button } from 'react-native';
 // import { BarCodeScanner } from 'expo-barcode-scanner';
 import { CameraView, useCameraPermissions } from 'expo-camera'
 import { Icon } from 'react-native-elements';
-import {
-  getPrestamoByObjectIdWhereDevueltoIsFalse,
-  getAllPrestamos,
-  getObjetoByCode,
-  getObjetoById,
-  getPrestamoById, registroDevolucionPrestamo,
-  updatePrestamoById,
-  updateObjetoById
-} from "../src/REST_METHODS";
-import { where, query } from 'firebase/firestore';
 
-export default function CameraScreen({ navigation }) {
+export default function CameraScreen({ handleBarCodeScanned: externalHandleBarCodeScanned, navigation, barcodeTypes }) {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
 
@@ -23,6 +13,9 @@ export default function CameraScreen({ navigation }) {
   const [flashState, setFlashState] = useState(false)
 
   const [permission, requestPermission] = useCameraPermissions();
+
+  //Se debe de mandar en los parametros forsozamente el metodo
+  // const { handleBarCodeScanned } = route.params
 
   if (!permission) {
     // Camera permissions are still loading.
@@ -41,34 +34,7 @@ export default function CameraScreen({ navigation }) {
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
-    getObjetoByCode(data).then((response) => {
-      //Caso en el que el objeto este disponible
-      if (response.estado === true) {
-        alert(`Objeto disponible, ahora escanea la credencial!`);
-        navigation.navigate('CameraScreen2', { idObjeto: response.id });
-      } else {
-
-        //Caso en el que el objeto este prestado y se este devolviendo
-        getPrestamoByObjectIdWhereDevueltoIsFalse(response.id).then((prestamos) => {
-
-          //Se hace el prestamo.devuelto = true
-          const { id, ...prestamoSinId } = prestamos[0]
-          updatePrestamoById(prestamos[0].id, prestamoSinId)
-
-          //Se hace el objeto.estado = true
-          getObjetoById(prestamos[0].objeto_id).then((objeto) => {
-            objeto.estado = true
-            const { id, ...objetoSinId } = objeto
-            updateObjetoById(objeto.id, objetoSinId)
-          })
-        })
-
-
-      }
-    }).catch((error) => {
-      alert(`El objeto no se encuentra registrado!`);
-    })
-
+    externalHandleBarCodeScanned({data})
   };
 
   const toogleFlashState = () => {
@@ -80,7 +46,7 @@ export default function CameraScreen({ navigation }) {
 
       <CameraView style={styles.cameraView} enableTorch={flashState}
         barcodeScannerSettings={{
-          barcodeTypes: ["qr", "code39"],
+          barcodeTypes: {barcodeTypes},
         }}
         onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}>
 
@@ -177,9 +143,9 @@ const styles = StyleSheet.create({
     marginTop: 50,
     marginLeft: 20,
   },
-  textContainer:{ 
-    alignItems: 'center', 
+  textContainer: {
+    alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'rgba(62, 62, 62, 0.7)',
-   },
+  },
 });

@@ -11,40 +11,13 @@ export default function CameraScreen2({ navigation, route }) {
     const [isModalVisible, setModalVisible] = useState(false);
     const [mensaje, setMensaje] = useState('');
 
-    const toggleModal = () => {
-        setModalVisible(!isModalVisible);
-    };
-
-    const handleCancel = () => {
-        toggleModal();
-    };
-    const handleAccept = () => {
-        request
-        toggleModal();
-    };
+    
 
 
-    const request = ({ dataBarCode }) => {
-        const fechaHoraActual = format(new Date(), 'yyyy-MM-dd HH:mm:ss');
-        const data = {
-            objeto_id: route.params.idObjeto,
-            numero_control: dataBarCode,
-            hora_solicitud: fechaHoraActual,
-            devluelto: false
-        }
-        createPrestamo(data).then(r => () => {
-        });
-    };
+    
 
     const handleBarCodeScanned = ({ type, data }) => {
-        if (type === "org.iso.Code39") {
-            setScanned(true);
-            request({ dataBarCode: data });
-            alert(`Registro Exitoso con el numero de control: ${data}`);
-            navigation.navigate('HomeScreen');
-        } else {
-            alert(`El codigo no pertenece a una credencial.`);
-        }
+        
         setScanned(true);
     };
 
@@ -61,17 +34,7 @@ export default function CameraScreen2({ navigation, route }) {
                 onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}>
                 {scanned && <Button title={'Da click para volver a escanear'} onPress={() => setScanned(false)} />}
             </CameraView>
-            <Modal isVisible={isModalVisible}>
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                    <Text>Este es un mensaje emergente.</Text>
-                    <TouchableOpacity onPress={handleAccept}>
-                        <Text>Aceptar</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={handleCancel}>
-                        <Text>Cancelar</Text>
-                    </TouchableOpacity>
-                </View>
-            </Modal>
+            
             {scanned && <Button title={'Da click para volver a escanear'} onPress={() => setScanned(false)} />}
         </View>
     );
