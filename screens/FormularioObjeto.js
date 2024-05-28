@@ -57,7 +57,12 @@ const FormularioObjeto = ({route, navigation}) => {
     }
 
     const handleEscanearCodigo = () => {
-        navigation.navigate('CameraCodeRegisterScreen', {nombre});
+        if(modoEdicion){
+            navigation.navigate('CameraCodeRegisterScreen', {nombre, objetoParaEditar});
+        }else{
+            navigation.navigate('CameraCodeRegisterScreen', {nombre});
+        }
+        
     }
 
     return (

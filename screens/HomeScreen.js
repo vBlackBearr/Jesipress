@@ -99,7 +99,7 @@ const App = () => {
 
         <NavigationContainer>
             <Stack.Navigator initialRouteName="HomeScreen">
-                <Stack.Screen name="HomeScreen" component={HomeScreen} />
+                <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ title: "Jesipress", headerStyle: {backgroundColor: 'papayawhip'}}}/>
                 <Stack.Screen name="CameraScreen" component={CameraScreen} options={{ headerShown: false }} />
                 <Stack.Screen name="CameraScreen2" component={CameraScreen2} />
                 <Stack.Screen name="ObjetosScreen" component={ObjetosScreen} />

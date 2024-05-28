@@ -4,7 +4,7 @@ import { Text, View, StyleSheet, Button } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera'
 import { Icon } from 'react-native-elements';
 
-export default function CameraScreen({ handleBarCodeScanned: externalHandleBarCodeScanned, navigation, barcodeTypes }) {
+export default function CameraScreen({ handleBarCodeScanned: externalHandleBarCodeScanned, navigation, barcodeTypes = [] }) {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
 
@@ -34,7 +34,7 @@ export default function CameraScreen({ handleBarCodeScanned: externalHandleBarCo
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
-    externalHandleBarCodeScanned({data})
+    externalHandleBarCodeScanned({ data })
   };
 
   const toogleFlashState = () => {
@@ -45,8 +45,9 @@ export default function CameraScreen({ handleBarCodeScanned: externalHandleBarCo
     <View style={styles.container}>
 
       <CameraView style={styles.cameraView} enableTorch={flashState}
+      // barcodeType
         barcodeScannerSettings={{
-          barcodeTypes: {barcodeTypes},
+          barcodeTypes:  [...barcodeTypes] ,
         }}
         onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}>
 
@@ -64,15 +65,24 @@ export default function CameraScreen({ handleBarCodeScanned: externalHandleBarCo
         </View>
         <View style={styles.viewCentral}>
           <View style={styles.textContainer}>
-            <Text style={{ fontSize: 30, color: 'white' }}>Escanea el Objeto</Text>
+            <Text style={{ fontSize: 30, color: 'white' }}>Escanea {barcodeTypes.includes("qr") ? "el Objeto" : "la Credencial"}</Text>
           </View>
-          <Icon
-            name='scan-outline'
-            type='ionicon'
-            color='rgba(128,128,128, 0.8)'
-            size={400}
+          {barcodeTypes.includes("qr") ? (
+            <Icon
+              name='scan-outline'
+              type='ionicon'
+              color='rgba(128,128,128, 0.8)'
+              size={400}
 
-          />
+            />
+          ) : (
+            <View style={{height: 350, display: 'flex', justifyContent: "center", alignItems: "center"}}>
+              <View style={{ borderColor: 'rgba(128,128,128, 0.8)', borderRadius: 10, width: '90%', height: 100, borderWidth: 5 }}>
+
+              </View>
+            </View>
+          )}
+
 
         </View>
         <View style={styles.viewInferior}>

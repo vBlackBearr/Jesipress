@@ -44,7 +44,7 @@ export const getObjetoByCode = async (codigo) => {
 };
 
 
-export const getObjetoById  = async (objetoId)=> {
+export const getObjetoById  = async (objetoId): Promise<object> => {
     try {
         const objetoRef = doc(db, 'objetos', objetoId);
         const objetoDoc = await getDoc(objetoRef);

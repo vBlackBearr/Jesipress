@@ -19,9 +19,16 @@ export default function CameraScreen({ navigation, route }) {
 
 
     const { nombre } = route.params;
+    const objetoParaEditar = route.params?.objetoParaEditar;
+    const modoEdicion = !!objetoParaEditar;
+
 
     const handleBarCodeScanned = ({ data }) => {
-        navigation.navigate('FormularioObjeto', { nombre, code: data });
+        if (modoEdicion) {
+            navigation.navigate('FormularioObjeto', { nombre, code: data, objetoParaEditar });
+        } else {
+            navigation.navigate('FormularioObjeto', { nombre, code: data });
+        }
         setScanned(true);
     };
 
