@@ -22,13 +22,21 @@ export default function ScanObjeto({ navigation }) {
 
                     //Se hace el prestamo.devuelto = true
                     const { id: id_prestamo, ...prestamoSinId } = prestamo_data
-                    updatePrestamoById(prestamo_data.id, {devuelto: true, ...prestamoSinId}).then(() => {
+                    const newPrestamo = {
+                        ...prestamoSinId,
+                        devuelto: true
+                    }
+                    updatePrestamoById(prestamo_data.id, newPrestamo).then(() => {
 
                         //Se hace el objeto.estado = true
                         objeto_data.estado = true
                         const { id: id_objeto, ...objetoSinId } = objeto_data
-                        alert(Object.entries(objetoSinId))
-                        updateObjetoById(objeto_data.id, objetoSinId).then(() => {
+                        // alert(Object.entries(objetoSinId))
+                        const newObjeto = {
+                            ...objetoSinId,
+                            prestamo_id: ""
+                        }
+                        updateObjetoById(objeto_data.id, newObjeto).then(() => {
 
                             //Se termino el proceso de devolucion 
                             alert(`Devolucion exitosa!`);

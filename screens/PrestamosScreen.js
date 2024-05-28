@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from 'react';
-import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import axios from 'axios';
 import ModalConfirmation from '../src/ModalConfirmation';
-import {deletePrestamoById, getAllPrestamos} from "../src/REST_METHODS";
+import { deletePrestamoById, getAllPrestamos, getObjetoById } from "../src/REST_METHODS";
 
 const ListaPrestamos = () => {
     const [prestamos, setPrestamos] = useState([]);
@@ -10,10 +10,27 @@ const ListaPrestamos = () => {
     const [prestamoSeleccionado, setPrestamoSeleccionado] = useState(null);
 
     useEffect(() => {
-       getAllPrestamos()
-            .then((response) => {
-                console.log(response);
+        getAllPrestamos()
+            .then(async (response) => {
+                // console.log(response);
                 setPrestamos(response);
+
+                const updatedPrestamos = [...response]
+                const promises = updatedPrestamos.map(async (prestamo) => {
+                    if(prestamo.objeto_id){
+                        // alert(Object.entries(getObjetoById(prestamo.objeto_id)))
+                        // prestamo.nombre_objeto = await getObjetoById(prestamo.objeto_id)
+                        const {nombre} = await getObjetoById(prestamo.objeto_id)
+                        prestamo.nombre_objeto = nombre
+                    }
+                    return prestamo
+                })
+
+                // Esperar a que todas las promesas se resuelvan
+                const resolvedPrestamos = await Promise.all(promises);
+
+                // Actualizar el estado con los objetos modificados
+                setPrestamos(resolvedPrestamos);    
             })
             .catch((error) => {
                 console.error('Error al obtener la lista de préstamos:', error);
@@ -46,16 +63,19 @@ const ListaPrestamos = () => {
             <Text style={styles.title}>Lista de Préstamos</Text>
             <FlatList
                 data={prestamos}
-                keyExtractor={(item) => item.id.toString()}
+                keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
                     <View style={styles.prestamoItem}>
                         <Text>Persona: {item.numero_control}</Text>
                         <Text>Objeto: {item.nombre_objeto}</Text>
                         <Text>Hora Solicitud: {item.hora_solicitud}</Text>
 
-                        {!item.hora_devolucion ? (
+                        {!item.devuelto ? (
                             <Text style={{ color: 'orange' }}>En Prestamo</Text>
-                        ) : null}
+                        ) : (
+                            <Text style={{ color: 'green' }}>Devuelto</Text>
+
+                        )}
 
                         <TouchableOpacity onPress={() => mostrarModalConfirmation(item)}>
                             <Text style={styles.botonEliminar}>Eliminar</Text>

@@ -107,6 +107,7 @@ const App = () => {
                 <Stack.Screen name="FormularioObjeto" component={FormularioObjeto} />
                 <Stack.Screen name="ScanCredencial" component={ScanCredencial} options={{ headerShown: false }}/>
                 <Stack.Screen name="ScanObjeto" component={ScanObjeto} options={{ headerShown: false }}/>
+                <Stack.Screen name="CameraCodeRegisterScreen" component={CameraCodeRegisterScreen}/>
             </Stack.Navigator>
         </NavigationContainer>
 

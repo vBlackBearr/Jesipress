@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Button } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 
-export default function CameraScreen({navigation, route}) {
+export default function CameraScreen({ navigation, route }) {
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
 
@@ -18,10 +18,10 @@ export default function CameraScreen({navigation, route}) {
     }, []);
 
 
-    const {nombre} = route.params;
+    const { nombre } = route.params;
 
     const handleBarCodeScanned = ({ data }) => {
-        navigation.navigate('FormularioObjeto',{nombre, code: data});
+        navigation.navigate('FormularioObjeto', { nombre, code: data });
         setScanned(true);
     };
 
@@ -31,6 +31,7 @@ export default function CameraScreen({navigation, route}) {
     if (hasPermission === false) {
         return <Text>No access to camera</Text>;
     }
+
 
     return (
         <View style={styles.container}>
