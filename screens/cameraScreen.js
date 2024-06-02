@@ -45,25 +45,31 @@ export default function CameraScreen({ handleBarCodeScanned: externalHandleBarCo
     <View style={styles.container}>
 
       <CameraView style={styles.cameraView} enableTorch={flashState}
-      // barcodeType
+        // barcodeType
         barcodeScannerSettings={{
-          barcodeTypes:  [...barcodeTypes] ,
+          barcodeTypes: [...barcodeTypes],
         }}
         onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}>
 
-        {scanned && <Button title={'Da click para volver a escanear'} onPress={() => setScanned(false)} />}
-        <View style={styles.viewSuperior}>
-          <Icon
-            name='chevron-back-outline'
-            type='ionicon'
-            color='#000'
-            size={50}
-            iconStyle={{ left: -2 }}
-            containerStyle={styles.btnRegresar}
-            onPress={() => { navigation.navigate('HomeScreen') }}
-          />
-        </View>
-        <View style={styles.viewCentral}>
+        
+        {!barcodeTypes.includes("qr") ? (
+          <View style={styles.viewSuperior}>
+            <Icon
+              name='chevron-back-outline'
+              type='ionicon'
+              color='#000'
+              size={50}
+              iconStyle={{ left: -2 }}
+              containerStyle={styles.btnRegresar}
+              onPress={() => { navigation.navigate('HomeScreen') }}
+            />
+          </View>
+        ) : (<></>)}
+        <View style={{
+          width: '100%',
+          height: (barcodeTypes.includes("qr")?"70%":"50%"),
+          justifyContent: "space-between"
+        }}>
           <View style={styles.textContainer}>
             <Text style={{ fontSize: 30, color: 'white' }}>Escanea {barcodeTypes.includes("qr") ? "el Objeto" : "la Credencial"}</Text>
           </View>
@@ -76,7 +82,7 @@ export default function CameraScreen({ handleBarCodeScanned: externalHandleBarCo
 
             />
           ) : (
-            <View style={{height: 350, display: 'flex', justifyContent: "center", alignItems: "center"}}>
+            <View style={{ height: 350, display: 'flex', justifyContent: "center", alignItems: "center" }}>
               <View style={{ borderColor: 'rgba(128,128,128, 0.8)', borderRadius: 10, width: '90%', height: 100, borderWidth: 5 }}>
 
               </View>
@@ -85,6 +91,7 @@ export default function CameraScreen({ handleBarCodeScanned: externalHandleBarCo
 
 
         </View>
+        {scanned && <Button title={'Da click para volver a escanear'} onPress={() => setScanned(false)} />}
         <View style={styles.viewInferior}>
           <View style={styles.flashView} onPress={() => { toogleFlashState() }}>
             <Icon
@@ -116,6 +123,7 @@ const styles = StyleSheet.create({
     top: '1px',
     position: 'absolute',
     display: 'flex',
+    justifyContent: "space-between"
   },
   viewSuperior: {
     width: '100%',
@@ -123,10 +131,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'flex-start',
     alignItems: 'flex-start'
-  },
-  viewCentral: {
-    width: '100%',
-    height: '50%'
   },
   viewInferior: {
     width: '100%',

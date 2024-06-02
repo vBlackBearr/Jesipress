@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { getObjetoByCode, getPrestamoById, updatePrestamoById, updateObjetoById } from "../src/REST_METHODS";
 import CameraScreen from "./cameraScreen";
 
@@ -5,12 +6,11 @@ import CameraScreen from "./cameraScreen";
 export default function ScanObjeto({ navigation }) {
 
     const handleBarCodeScanned = ({ data }) => {
-        // alert("Codigo: " + data)
         getObjetoByCode(data).then((objeto_data) => {
             //Se valida si el objeto esta disponible o no
             if (objeto_data.estado === true) {
 
-                //Caso en el que el objeto este disponible
+                //Caso en el que el objeto este disponible se manda a la pantalla de escanear 
                 alert(`Objeto disponible, ahora escanea la credencial!`);
 
 

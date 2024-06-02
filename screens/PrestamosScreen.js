@@ -4,38 +4,58 @@ import axios from 'axios';
 import ModalConfirmation from '../src/ModalConfirmation';
 import { deletePrestamoById, getAllPrestamos, getObjetoById } from "../src/REST_METHODS";
 
-const ListaPrestamos = () => {
+const ListaPrestamos = ({ navigation }) => {
     const [prestamos, setPrestamos] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [prestamoSeleccionado, setPrestamoSeleccionado] = useState(null);
 
     useEffect(() => {
+        return navigation.addListener('focus', () => {
+            cargarPrestamos();
+        });
+        
+    }, [navigation]);
+
+    useEffect(() => {
+        cargarPrestamos()
+    }, []);
+
+    const cargarPrestamos = () => {
         getAllPrestamos()
             .then(async (response) => {
-                // console.log(response);
-                setPrestamos(response);
-
-                const updatedPrestamos = [...response]
+                // Crear una copia de los préstamos para trabajar con ellos
+                let updatedPrestamos = [...response];
+                
+                // Array de promesas para obtener los nombres de los objetos
                 const promises = updatedPrestamos.map(async (prestamo) => {
-                    if(prestamo.objeto_id){
-                        // alert(Object.entries(getObjetoById(prestamo.objeto_id)))
-                        // prestamo.nombre_objeto = await getObjetoById(prestamo.objeto_id)
-                        const {nombre} = await getObjetoById(prestamo.objeto_id)
-                        prestamo.nombre_objeto = nombre
+                    if (prestamo.objeto_id) {
+                        const { nombre } = await getObjetoById(prestamo.objeto_id);
+                        prestamo.nombre_objeto = nombre;
                     }
-                    return prestamo
-                })
-
+                    return prestamo;
+                });
+    
                 // Esperar a que todas las promesas se resuelvan
                 const resolvedPrestamos = await Promise.all(promises);
-
-                // Actualizar el estado con los objetos modificados
-                setPrestamos(resolvedPrestamos);    
+    
+                // Ordenar los préstamos primero por 'devuelto' y luego por 'hora_solicitud'
+                resolvedPrestamos.sort((a, b) => {
+                    // Ordenar por 'devuelto' (false primero)
+                    if (a.devuelto !== b.devuelto) {
+                        return a.devuelto - b.devuelto;
+                    }
+                    // Si 'devuelto' es igual, ordenar por 'hora_solicitud' en orden descendente
+                    return new Date(b.hora_solicitud) - new Date(a.hora_solicitud);
+                });
+    
+                // Actualizar el estado con los objetos modificados y ordenados
+                setPrestamos(resolvedPrestamos);
             })
             .catch((error) => {
                 console.error('Error al obtener la lista de préstamos:', error);
             });
-    }, []);
+    };
+    
 
     const mostrarModalConfirmation = (prestamo) => {
         setPrestamoSeleccionado(prestamo);

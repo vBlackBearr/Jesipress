@@ -49,15 +49,7 @@ export const ObjetosScreen = ({ navigation }) => {
         cargarObjetos();
     }, []);
 
-    /*useEffect(() => {
-        getAllObjetos().then(response => {
-            setObjetos(response);
-        }).catch(() => {
-            console.log('Error obteniendo todos los objetos')
-        });
-    }, [navigation]);*/
-
-
+    // Para que cuando se le regrese el focus recargue la lista 
     useEffect(() => {
         return navigation.addListener('focus', () => {
             cargarObjetos();

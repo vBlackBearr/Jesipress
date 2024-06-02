@@ -20,13 +20,12 @@ export default function ScanCredencial({ route, navigation }) {
     };
 
     const handleAccept = () => {
-        // request
         toggleModal();
     };
 
     const handleBarCodeScanned = ({ data }) => {
 
-        const fechaHoraActual = format(new Date(), 'yyyy-MM-dd HH:mm:ss');
+        const fechaHoraActual = format(new Date(), 'yyyy-MM-dd HH:mm');
         const prestamoData = {
             objeto_id: route.params.idObjeto,
             numero_control: data, //numero de control escaneado de la credencial
