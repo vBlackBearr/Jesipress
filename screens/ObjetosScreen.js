@@ -8,6 +8,7 @@ export const ObjetosScreen = ({ navigation }) => {
     const [mensaje, setMensaje] = useState('');
 
 
+
     const cargarObjetos = () => {
         getAllObjetos()
             .then(async (response) => {
@@ -34,11 +35,11 @@ export const ObjetosScreen = ({ navigation }) => {
                     return objeto;
                 });
 
-                    // Esperar a que todas las promesas se resuelvan
-                    const resolvedObjetos = await Promise.all(promises);
+                // Esperar a que todas las promesas se resuelvan
+                const resolvedObjetos = await Promise.all(promises);
 
-                    // Actualizar el estado con los objetos modificados
-                    setObjetos(resolvedObjetos);
+                // Actualizar el estado con los objetos modificados
+                setObjetos(resolvedObjetos);
             })
             .catch(() => {
                 console.log('Error obteniendo todos los objetos');
@@ -89,7 +90,7 @@ export const ObjetosScreen = ({ navigation }) => {
                 renderItem={({ item }) => (
                     <View style={styles.item}>
                         <Text style={styles.itemText}>{item.nombre}</Text>
-                        <Text style={{color: (item.estado?"green":"brown")}}>{item.estado?"Disponible":"No disponible"}</Text>
+                        <Text style={{ color: (item.estado ? "green" : "brown") }}>{item.estado ? "Disponible" : "No disponible"}</Text>
                         <View style={styles.buttonContainer}>
                             <TouchableOpacity
                                 style={[styles.button, styles.editButton]}
@@ -114,8 +115,8 @@ export const ObjetosScreen = ({ navigation }) => {
                 icon="plus"
                 onPress={handleAgregarObjeto}
             />
-
         </View>
+
     );
 };
 

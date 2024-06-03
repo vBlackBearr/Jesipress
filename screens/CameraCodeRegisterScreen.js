@@ -17,11 +17,9 @@ export default function CameraScreen({ navigation, route }) {
 
     }, []);
 
-
     const { nombre } = route.params;
     const objetoParaEditar = route.params?.objetoParaEditar;
     const modoEdicion = !!objetoParaEditar;
-
 
     const handleBarCodeScanned = ({ data }) => {
         if (modoEdicion) {

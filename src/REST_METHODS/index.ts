@@ -160,12 +160,9 @@ export const getPrestamoByObjectIdWhereDevueltoIsFalse = async (object_id) => {
 };
 
 
-
-
-
 export const getPrestamoById = async (prestamoId) => {
     try {
-        const prestamoRef = doc(db, 'prestamos', prestamoId);
+        const prestamoRef = doc(db, "prestamos", prestamoId);
         const prestamoDoc = await getDoc(prestamoRef);
 
         if (prestamoDoc.exists()) {
@@ -186,8 +183,6 @@ export const getPrestamoById = async (prestamoId) => {
 export const createPrestamo = async (prestamoData) => {
     try {
         const prestamoRef = await addDoc(collection(db, 'prestamos'), prestamoData);
-        const objetoId = prestamoData.objeto_id;
-        await updateObjetoEstado(objetoId, false); // Llamar a la función para actualizar el estado del objeto
         return prestamoRef.id;
     } catch (error) {
         console.error('Error al crear un nuevo préstamo:', error);

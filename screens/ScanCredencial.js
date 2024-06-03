@@ -41,7 +41,8 @@ export default function ScanCredencial({ route, navigation }) {
                 const { id, ...objetoSinId} = objeto
                 const newObjeto = {
                     ...objetoSinId,
-                    prestamo_id: prestamo_id
+                    prestamo_id: prestamo_id,
+                    estado: false
                 }
                 updateObjetoById(prestamoData.objeto_id, newObjeto)
             })
