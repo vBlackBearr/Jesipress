@@ -1,23 +1,138 @@
-import { View, Text, Modal, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import { View, Text, Modal, StyleSheet, TouchableOpacity, TextInput, Keyboard } from 'react-native';
 import { Icon } from 'react-native-elements';
+import { deleteObjetoById, getObjetoById, updateObjetoById } from './REST_METHODS';
+import QRCode from 'react-native-qrcode-svg';
 
+const ObjectModal = ({ visible, object, handleCancel, handlePrestar, handleEditar, handleEliminar }) => {
+    const [nombreEditMode, setNombreEditMode] = useState(false);
 
-const ObjectModal = ({ visible, object, handleCancel, handlePrestar }) => {
+    const [nombre, setNombre] = useState(object?.nombre || "");
+    const [codigo, setCodigo] = useState(object?.codigo || "");
+
+    const [originalNombre, setOriginalNombre] = useState(object?.nombre || "");
+    const [originalCodigo, setOriginalCodigo] = useState(object?.codigo || "");
+
+    const nombreInputRef = useRef(null);
+    const codigoInputRef = useRef(null);
+
+    useEffect(() => {
+        if (nombreEditMode) {
+            nombreInputRef.current.focus();
+        }
+    }, [nombreEditMode]);
+
+    useEffect(() => {
+        setNombre(object?.nombre || "");
+        setCodigo(object?.codigo || "");
+        setOriginalNombre(object?.nombre || "");
+    }, [object]);
+
+    useEffect(() => {
+        cancelEditing()
+    }, [visible])
+
+    const handleEditDocument = (name) => {
+        setNombreEditMode(false);
+
+        if (name === "nombre") {
+            setOriginalNombre(nombre); // Guardar el valor original
+            setNombreEditMode(true);
+        }
+    };
+
+    const handleEditingDocument = (name, value) => {
+        if (name === "nombre") {
+            setNombre(value);
+        } else if (name === "codigo") {
+            setCodigo(value);
+        }
+    };
+
+    const handleUpdateDocument = (name) => {
+        alert("Actualizando");
+        setNombreEditMode(false);
+
+        if (name === "nombre") {
+            const { id, ...objectSinId } = object;
+            const newObj = {
+                ...objectSinId,
+                nombre: nombre,
+                codigo: codigo
+            };
+            updateObjetoById(object.id, newObj);
+        } else if (name === "codigo") {
+            const { id, ...objectSinId } = object;
+            const newObj = {
+                ...objectSinId,
+                nombre: nombre,
+                codigo: codigo
+            };
+            updateObjetoById(object.id, newObj);
+        }
+    };
+
+    const cancelEditing = () => {
+        if (nombreEditMode) {
+            setNombre(originalNombre); // Restaurar el valor original
+        }
+        setNombreEditMode(false);
+        Keyboard.dismiss();
+    };
 
     return (
         <Modal
             animationType="slide"
             transparent={true}
             visible={visible}
-            onRequestClose={null}
+            onRequestClose={handleCancel}
         >
             <View style={styles.modalContainer}>
-
                 <View style={styles.modalContent}>
-                    <View style={{alignItems: "flex-end"}}>
-                        <Icon name="close-circle" type="material-community" onPress={handleCancel}/>
+                    <View style={{ alignItems: "flex-end" }}>
+                        <Icon name="close-circle" type="material-community" onPress={handleCancel} />
                     </View>
-                    <Text style={styles.titulo}>{object?.nombre}</Text>
+
+                    {/* Para Nombre */}
+                    <TouchableOpacity
+                        style={{ display: 'flex', flexDirection: 'row', alignContent: "center", }}
+                        onPress={() => handleEditDocument("nombre")}
+                    >
+                        <TextInput
+                            style={styles.titulo}
+                            value={nombre}
+                            onChangeText={(text) => handleEditingDocument("nombre", text)}
+                            ref={nombreInputRef}
+                            editable={nombreEditMode}
+                            blurOnSubmit={false}
+                        />
+                        <Text> </Text>
+                        {!nombreEditMode ? (
+                            <Icon name="pencil" type="material-community" />
+                        ) : (
+                            <>
+                                <Icon
+                                    name="check"
+                                    type="material-community"
+                                    color={"green"}
+                                    style={{ marginBottom: 15, marginLeft: 10 }}
+                                    size={40}
+                                    onPress={() => handleUpdateDocument("nombre")}
+                                />
+                                <Icon
+                                    name="close"
+                                    type="material-community"
+                                    color={"red"}
+                                    style={{ marginBottom: 15, marginLeft: 10 }}
+                                    size={40}
+                                    onPress={cancelEditing}
+                                />
+                            </>
+                        )}
+                    </TouchableOpacity>
+
+
+                    {/* Para Estado */}
                     <View style={{ width: '100%', display: 'flex', flexDirection: 'row' }}>
                         <Text style={styles.mensaje}>Estado:</Text>
                         <Text style={{
@@ -25,15 +140,58 @@ const ObjectModal = ({ visible, object, handleCancel, handlePrestar }) => {
                             ...styles.mensaje
                         }}> {object.estado ? "Disponible" : "Prestado"}</Text>
                     </View>
-                    <View style={{ width: '100%', alignItems: 'center', padding: 10 }}>
+
+
+                    {/* Para codigo */}
+                    <TouchableOpacity
+                        style={{ display: 'flex', flexDirection: 'row', alignItems: "center" }}
+                        onPress={() => handleEditDocument("codigo")}
+                    >
+                        <View style={styles.codigoView}>
+                            <View style={{ width: '100%', marginBottom: 15, display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                                <Text>Codigo: </Text>
+                                <Icon name="pencil" type="material-community" />
+                            </View>
+
+                            <QRCode value={codigo} size={200} />
+
+                            <Text style={{ marginTop: 10 }}>{codigo}</Text>
+
+                        </View>
+
+                    </TouchableOpacity>
+
+                    {/* Botones */}
+                    <View
+                        style={{
+                            width: '100%',
+                            alignItems: 'center',
+                            padding: 10,
+                            display: 'flex',
+                            flexDirection: 'row',
+                            flexWrap: 'wrap',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            marginTop: 30,
+                        }}>
+                        <TouchableOpacity
+                            style={[styles.button, styles.editButton]}
+                            onPress={() => handleEditar(object.id)}
+                        >
+                            <Text style={styles.buttonText}>Editar</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={[styles.button, styles.deleteButton]}
+                            onPress={() => handleEliminar(object.id)}
+                        >
+                            <Text style={styles.buttonText}>Eliminar</Text>
+                        </TouchableOpacity>
                         <TouchableOpacity
                             style={{
                                 width: '90%',
                                 height: 60,
-                                backgroundColor: '#ce5000',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                borderRadius: 10
+                                backgroundColor: '#c57d56',
+                                ...styles.button
                             }}
                             onPress={handlePrestar}>
                             <Text>Prestar</Text>
@@ -42,9 +200,8 @@ const ObjectModal = ({ visible, object, handleCancel, handlePrestar }) => {
                 </View>
             </View>
         </Modal>
-    )
-}
-
+    );
+};
 
 const styles = StyleSheet.create({
     modalContainer: {
@@ -67,6 +224,7 @@ const styles = StyleSheet.create({
     mensaje: {
         fontSize: 16,
         marginBottom: 16,
+        alignSelf: 'center'
     },
     botonesContainer: {
         flexDirection: 'row',
@@ -80,6 +238,32 @@ const styles = StyleSheet.create({
     botonAceptar: {
         color: 'green',
         fontSize: 16,
+    },
+    codigoView: {
+        display: 'flex',
+        flexDirection: 'column',
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    button: {
+        borderRadius: 10, 
+        display: 'flex',
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    editButton: {
+        backgroundColor: '#84b6f4',
+        width: '40%',
+        height: 30,
+        margin: '5%',
+        borderRadius: 10,
+    },
+    deleteButton: {
+        backgroundColor: '#ff6961',
+        width: '40%',
+        height: 30,
+        margin: '5%',
     },
 });
 
