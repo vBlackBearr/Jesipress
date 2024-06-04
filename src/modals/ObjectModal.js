@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, Modal, StyleSheet, TouchableOpacity, TextInput, Keyboard } from 'react-native';
 import { Icon } from 'react-native-elements';
-import { deleteObjetoById, getObjetoById, updateObjetoById } from '../REST_METHODS';
+import { deleteObjetoById, getObjetoById, updateObjetoById } from '../restMethods';
 import QRCode from 'react-native-qrcode-svg';
-import { CameraRo , ToastAndroid } from "react-native"
 // import RNFS from "react-native-fs"
+// import Share from 'react-native-share';
 
 const ObjectModal = ({ visible, object, handleCancel, handlePrestar, handleEditar, handleEliminar }) => {
     const [nombreEditMode, setNombreEditMode] = useState(false);
@@ -13,10 +13,8 @@ const ObjectModal = ({ visible, object, handleCancel, handlePrestar, handleEdita
     const [codigo, setCodigo] = useState(object?.codigo || "");
 
     const [originalNombre, setOriginalNombre] = useState(object?.nombre || "");
-    const [originalCodigo, setOriginalCodigo] = useState(object?.codigo || "");
 
     const nombreInputRef = useRef(null);
-    const codigoInputRef = useRef(null);
 
     useEffect(() => {
         if (nombreEditMode) {
@@ -82,18 +80,33 @@ const ObjectModal = ({ visible, object, handleCancel, handlePrestar, handleEdita
         Keyboard.dismiss();
     };
 
-//     function saveQrToDisk() {
-//         this.svg.toDataURL((data) => {
-//             RNFS.writeFile(RNFS.CachesDirectoryPath+"/some-name.png", data, 'base64')
-//               .then((success) => {
-//                   return CameraRoll.saveToCameraRoll(RNFS.CachesDirectoryPath+"/some-name.png", 'photo')
-//               })
-//               .then(() => {
-//                   this.setState({ busy: false, imageSaved: true  })
-//                   ToastAndroid.show('Saved to gallery !!', ToastAndroid.SHORT)
-//               })
-//         })
-//    }
+    //     function saveQrToDisk() {
+    //         this.svg.toDataURL((data) => {
+    //             RNFS.writeFile(RNFS.CachesDirectoryPath+"/some-name.png", data, 'base64')
+    //               .then((success) => {
+    //                   return CameraRoll.saveToCameraRoll(RNFS.CachesDirectoryPath+"/some-name.png", 'photo')
+    //               })
+    //               .then(() => {
+    //                   this.setState({ busy: false, imageSaved: true  })
+    //                   ToastAndroid.show('Saved to gallery !!', ToastAndroid.SHORT)
+    //               })
+    //         })
+    //    }
+
+    saveQRCode = () => {
+        this.svg.toDataURL(callback);
+    };
+
+
+
+    function callback(dataURL) {
+        console.log(dataURL);
+        let shareImageBase64 = {
+            title: 'React Native',
+            url: `data:image/png;base64,${dataURL}`,
+        };
+        // Share.open(shareImageBase64).catch(error => console.log(error));
+    }
 
     return (
         <Modal
@@ -104,13 +117,13 @@ const ObjectModal = ({ visible, object, handleCancel, handlePrestar, handleEdita
         >
             <View style={styles.modalContainer}>
                 <View style={styles.modalContent}>
-                    <View style={{ alignItems: "flex-end", width: '100%'}}>
+                    <View style={{ alignItems: "flex-end", width: '100%' }}>
                         <Icon name="close-circle" type="material-community" onPress={handleCancel} />
                     </View>
 
                     {/* Para Nombre */}
                     <TouchableOpacity
-                        style={{ display: 'flex', flexDirection: 'row', alignContent: "center", width: 'auto'}}
+                        style={{ display: 'flex', flexDirection: 'row', alignContent: "center", width: 'auto' }}
                         onPress={() => handleEditDocument("nombre")}
                     >
                         <TextInput
@@ -166,9 +179,10 @@ const ObjectModal = ({ visible, object, handleCancel, handlePrestar, handleEdita
                             <View style={{ width: '100%', marginBottom: 15, display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                                 <Text>Codigo: </Text>
                                 <Icon name="pencil" type="material-community" />
+                                <Icon name="export-variant" type="material-community" onPress={() => saveQRCode()}/>
                             </View>
 
-                            <QRCode value={codigo} size={200} />
+                            <QRCode value={codigo} size={200} getRef={c => (this.svg = c)} />
 
                             <Text style={{ marginTop: 10 }}>{codigo}</Text>
 
@@ -257,7 +271,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     button: {
-        borderRadius: 10, 
+        borderRadius: 10,
         display: 'flex',
         justifyContent: "center",
         alignItems: "center"
@@ -270,6 +284,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     deleteButton: {
+        alignSelf: 'flex-start',
         backgroundColor: '#ff6961',
         width: '40%',
         height: 30,

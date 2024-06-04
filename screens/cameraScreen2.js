@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, Button, TouchableOpacity } from 'react-native';
 // import { BarCodeScanner } from 'expo-barcode-scanner';
 import { CameraView } from 'expo-camera'
 import Modal from 'react-native-modal';
-import { createPrestamo } from "../src/REST_METHODS";
+import { createPrestamo } from "../src/restMethods";
 const { format } = require('date-fns');
 
 export default function CameraScreen2({ navigation, route }) {

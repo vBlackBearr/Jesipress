@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { deleteObjetoById, getAllObjetos, getObjetoById } from "../src/REST_METHODS";
+import { deleteObjetoById, getAllObjetos, getObjetoById } from "../src/restMethods";
 import { FAB } from 'react-native-paper';
 import ObjectModal from "../src/modals/ObjectModal";
 

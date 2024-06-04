@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { getObjetoByCode, getPrestamoById, updatePrestamoById, updateObjetoById } from "../src/REST_METHODS";
+import { getObjetoByCode, getPrestamoById, updatePrestamoById, updateObjetoById } from "../src/restMethods";
 import CameraScreen from "./cameraScreen";
 import ObjectModal from "../src/modals/ObjectModal";
 import { useState } from 'react'

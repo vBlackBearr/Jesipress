@@ -1,6 +1,6 @@
-import { getObjetoByCode, getObjetoById, updateObjetoById } from "../src/REST_METHODS";
+import { getObjetoByCode, getObjetoById, updateObjetoById } from "../src/restMethods";
 import CameraScreen from "./cameraScreen";
-import { createPrestamo } from "../src/REST_METHODS";
+import { createPrestamo } from "../src/restMethods";
 import React, { useState } from 'react';
 import Modal from 'react-native-modal';
 import { Text, View, TouchableOpacity } from 'react-native';

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import axios from 'axios';
 import ModalConfirmation from '../src/modals/ModalConfirmation';
-import { deletePrestamoById, getAllPrestamos, getObjetoById } from "../src/REST_METHODS";
+import { deletePrestamoById, getAllPrestamos, getObjetoById } from "../src/restMethods";
 
 const ListaPrestamos = ({ navigation }) => {
     const [prestamos, setPrestamos] = useState([]);

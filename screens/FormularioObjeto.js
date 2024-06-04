@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, TextInput, StyleSheet} from 'react-native';
-import {createObjeto, updateObjetoById} from '../src/REST_METHODS';
+import {createObjeto, updateObjetoById} from '../src/restMethods';
 import {Button} from '@rneui/themed';
 
 const FormularioObjeto = ({route, navigation}) => {
