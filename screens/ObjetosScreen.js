@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { deleteObjetoById, getAllObjetos, getObjetoById } from "../src/REST_METHODS";
 import { FAB } from 'react-native-paper';
-import ObjectModal from "../src/ObjectModal";
+import ObjectModal from "../src/modals/ObjectModal";
 
 export const ObjetosScreen = ({ navigation }) => {
     const [objetos, setObjetos] = useState([]);

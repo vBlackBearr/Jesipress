@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { getObjetoByCode, getPrestamoById, updatePrestamoById, updateObjetoById } from "../src/REST_METHODS";
 import CameraScreen from "./cameraScreen";
-import ObjectModal from "../src/ObjectModal";
+import ObjectModal from "../src/modals/ObjectModal";
 import { useState } from 'react'
 
 

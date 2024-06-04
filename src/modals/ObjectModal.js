@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, Modal, StyleSheet, TouchableOpacity, TextInput, Keyboard } from 'react-native';
 import { Icon } from 'react-native-elements';
-import { deleteObjetoById, getObjetoById, updateObjetoById } from './REST_METHODS';
+import { deleteObjetoById, getObjetoById, updateObjetoById } from '../REST_METHODS';
 import QRCode from 'react-native-qrcode-svg';
+import { CameraRo , ToastAndroid } from "react-native"
+// import RNFS from "react-native-fs"
 
 const ObjectModal = ({ visible, object, handleCancel, handlePrestar, handleEditar, handleEliminar }) => {
     const [nombreEditMode, setNombreEditMode] = useState(false);
@@ -80,6 +82,19 @@ const ObjectModal = ({ visible, object, handleCancel, handlePrestar, handleEdita
         Keyboard.dismiss();
     };
 
+//     function saveQrToDisk() {
+//         this.svg.toDataURL((data) => {
+//             RNFS.writeFile(RNFS.CachesDirectoryPath+"/some-name.png", data, 'base64')
+//               .then((success) => {
+//                   return CameraRoll.saveToCameraRoll(RNFS.CachesDirectoryPath+"/some-name.png", 'photo')
+//               })
+//               .then(() => {
+//                   this.setState({ busy: false, imageSaved: true  })
+//                   ToastAndroid.show('Saved to gallery !!', ToastAndroid.SHORT)
+//               })
+//         })
+//    }
+
     return (
         <Modal
             animationType="slide"
@@ -89,13 +104,13 @@ const ObjectModal = ({ visible, object, handleCancel, handlePrestar, handleEdita
         >
             <View style={styles.modalContainer}>
                 <View style={styles.modalContent}>
-                    <View style={{ alignItems: "flex-end" }}>
+                    <View style={{ alignItems: "flex-end", width: '100%'}}>
                         <Icon name="close-circle" type="material-community" onPress={handleCancel} />
                     </View>
 
                     {/* Para Nombre */}
                     <TouchableOpacity
-                        style={{ display: 'flex', flexDirection: 'row', alignContent: "center", }}
+                        style={{ display: 'flex', flexDirection: 'row', alignContent: "center", width: 'auto'}}
                         onPress={() => handleEditDocument("nombre")}
                     >
                         <TextInput
@@ -175,12 +190,6 @@ const ObjectModal = ({ visible, object, handleCancel, handlePrestar, handleEdita
                             marginTop: 30,
                         }}>
                         <TouchableOpacity
-                            style={[styles.button, styles.editButton]}
-                            onPress={() => handleEditar(object.id)}
-                        >
-                            <Text style={styles.buttonText}>Editar</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
                             style={[styles.button, styles.deleteButton]}
                             onPress={() => handleEliminar(object.id)}
                         >
@@ -215,6 +224,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderRadius: 8,
         padding: 16,
+        alignItems: 'flex-start'
     },
     titulo: {
         fontSize: 20,

@@ -25,6 +25,7 @@
     "react-native": "^0.74.1",
     "react-native-camera": "^4.2.1",
     "react-native-elements": "^3.4.3",
+    "react-native-fs": "^2.20.0",
     "react-native-modal": "^13.0.1",
     "react-native-network-info": "^5.2.1",
     "react-native-paper": "^5.12.3",

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import axios from 'axios';
-import ModalConfirmation from '../src/ModalConfirmation';
+import ModalConfirmation from '../src/modals/ModalConfirmation';
 import { deletePrestamoById, getAllPrestamos, getObjetoById } from "../src/REST_METHODS";
 
 const ListaPrestamos = ({ navigation }) => {
