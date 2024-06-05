@@ -51,31 +51,16 @@ export const ObjetosScreen = ({ navigation }) => {
 
     const handleAgregarObjeto = () => {
         navigation.navigate('FormularioObjeto');
-    };
+    };    
 
-    const handlePrestar = () => {
-        navigation.navigate('ScanCredencial', { idObjeto: selectedObject.id });
-        setModalVisibility(false);
-    };
-    const handleEliminar = (objetoId) => {
-        deleteObjetoById(objetoId)
-            .then((response) => {
-                setObjetos(objetos.filter((objeto) => objeto.id !== objetoId));
-            })
-            .catch((error) => {
-                console.error('Error al eliminar el objeto:', error);
-                setMensaje('Error al eliminar el objeto');
-            });
-    };
-
-    const handleEditar = async (objetoId) => {
-        getObjetoById(objetoId).then((response) => {
-            setModalVisibility(false)
-            navigation.navigate('FormularioObjeto', { objetoParaEditar: response });
-        }).catch((error) => {
-            console.error('Error al editar el objeto:', error);
-        });
-    };
+    // const handleEditar = async (objetoId) => {
+    //     getObjetoById(objetoId).then((response) => {
+    //         setModalVisibility(false)
+    //         navigation.navigate('FormularioObjeto', { objetoParaEditar: response });
+    //     }).catch((error) => {
+    //         console.error('Error al editar el objeto:', error);
+    //     });
+    // };
 
     return (
         <View style={styles.container}>
@@ -130,10 +115,8 @@ export const ObjetosScreen = ({ navigation }) => {
                 <ObjectModal
                     visible={modalVisibility}
                     object={selectedObject}
-                    handleCancel={() => setModalVisibility(false)}
-                    handlePrestar={handlePrestar}
-                    handleEditar={handleEditar}
-                    handleEliminar={handleEliminar}
+                    handleClose={() => setModalVisibility(false)}
+                    navigation={navigation}
                 />
             )}
         </View>

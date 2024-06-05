@@ -50,7 +50,7 @@ export default function CameraScreen({ handleBarCodeScanned: externalHandleBarCo
           barcodeTypes: [...barcodeTypes],
         }}
         onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}>
-
+        
         
         {!barcodeTypes.includes("qr") ? (
           <View style={styles.viewSuperior}>

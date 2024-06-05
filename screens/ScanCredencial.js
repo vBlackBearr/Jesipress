@@ -35,7 +35,7 @@ export default function ScanCredencial({ route, navigation }) {
         
         //Creamos el prestamo
         createPrestamo(prestamoData).then((prestamo_id) => {
-            //Usamos el id del prestamo que se creo para ponerlo en 
+            //Usamos el id del prestamo  que se creo para ponerlo en 
             // objeto.prestamo_id del roude.params.idObjeto
             getObjetoById(prestamoData.objeto_id).then((objeto) => {
                 const { id, ...objetoSinId} = objeto

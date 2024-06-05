@@ -1,16 +1,19 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, Modal, StyleSheet, TouchableOpacity, TextInput, Keyboard } from 'react-native';
 import { Icon } from 'react-native-elements';
-import { deleteObjetoById, getObjetoById, updateObjetoById } from '../restMethods';
+import { deleteObjetoById, getObjetoById, returnPrestamo, updateObjetoById } from '../restMethods';
 import QRCode from 'react-native-qrcode-svg';
-// import RNFS from "react-native-fs"
-// import Share from 'react-native-share';
+import ModalConfirmation from './ModalConfirmation'
 
-const ObjectModal = ({ visible, object, handleCancel, handlePrestar, handleEditar, handleEliminar }) => {
+const ObjectModal = ({ visible, object, handleClose, navigation}) => {
+    
     const [nombreEditMode, setNombreEditMode] = useState(false);
 
     const [nombre, setNombre] = useState(object?.nombre || "");
     const [codigo, setCodigo] = useState(object?.codigo || "");
+
+    const [modalEliminar, setModalEliminar] = useState(false)
+    const [modalDevolver, setModalDevolver] = useState(false)
 
     const [originalNombre, setOriginalNombre] = useState(object?.nombre || "");
 
@@ -39,6 +42,24 @@ const ObjectModal = ({ visible, object, handleCancel, handlePrestar, handleEdita
             setOriginalNombre(nombre); // Guardar el valor original
             setNombreEditMode(true);
         }
+    };
+
+    const handlePrestar = () => {
+        navigation.navigate('ScanCredencial', { idObjeto: object.id });
+        handleClose()
+    };
+    
+    const handleEliminar = () => {
+        deleteObjetoById(object.id)
+            .then((response) => {
+                // setObjetos(objetos.filter((objeto) => objeto.id !== object.id));
+                // visible = false
+
+            })
+            .catch((error) => {
+                console.error('Error al eliminar el objeto:', error);
+                setMensaje('Error al eliminar el objeto');
+            });
     };
 
     const handleEditingDocument = (name, value) => {
@@ -80,6 +101,7 @@ const ObjectModal = ({ visible, object, handleCancel, handlePrestar, handleEdita
         Keyboard.dismiss();
     };
 
+
     //     function saveQrToDisk() {
     //         this.svg.toDataURL((data) => {
     //             RNFS.writeFile(RNFS.CachesDirectoryPath+"/some-name.png", data, 'base64')
@@ -113,12 +135,12 @@ const ObjectModal = ({ visible, object, handleCancel, handlePrestar, handleEdita
             animationType="slide"
             transparent={true}
             visible={visible}
-            onRequestClose={handleCancel}
+            onRequestClose={() => handleClose()}
         >
             <View style={styles.modalContainer}>
                 <View style={styles.modalContent}>
                     <View style={{ alignItems: "flex-end", width: '100%' }}>
-                        <Icon name="close-circle" type="material-community" onPress={handleCancel} />
+                        <Icon name="close-circle" type="material-community" onPress={() => handleClose()} />
                     </View>
 
                     {/* Para Nombre */}
@@ -159,7 +181,6 @@ const ObjectModal = ({ visible, object, handleCancel, handlePrestar, handleEdita
                         )}
                     </TouchableOpacity>
 
-
                     {/* Para Estado */}
                     <View style={{ width: '100%', display: 'flex', flexDirection: 'row' }}>
                         <Text style={styles.mensaje}>Estado:</Text>
@@ -168,7 +189,6 @@ const ObjectModal = ({ visible, object, handleCancel, handlePrestar, handleEdita
                             ...styles.mensaje
                         }}> {object.estado ? "Disponible" : "Prestado"}</Text>
                     </View>
-
 
                     {/* Para codigo */}
                     <TouchableOpacity
@@ -179,7 +199,7 @@ const ObjectModal = ({ visible, object, handleCancel, handlePrestar, handleEdita
                             <View style={{ width: '100%', marginBottom: 15, display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                                 <Text>Codigo: </Text>
                                 <Icon name="pencil" type="material-community" />
-                                <Icon name="export-variant" type="material-community" onPress={() => saveQRCode()}/>
+                                <Icon name="export-variant" type="material-community" onPress={() => saveQRCode()} />
                             </View>
 
                             <QRCode value={codigo} size={200} getRef={c => (this.svg = c)} />
@@ -205,7 +225,7 @@ const ObjectModal = ({ visible, object, handleCancel, handlePrestar, handleEdita
                         }}>
                         <TouchableOpacity
                             style={[styles.button, styles.deleteButton]}
-                            onPress={() => handleEliminar(object.id)}
+                            onPress={() => setModalEliminar(true)}
                         >
                             <Text style={styles.buttonText}>Eliminar</Text>
                         </TouchableOpacity>
@@ -213,15 +233,44 @@ const ObjectModal = ({ visible, object, handleCancel, handlePrestar, handleEdita
                             style={{
                                 width: '90%',
                                 height: 60,
-                                backgroundColor: '#c57d56',
+                                backgroundColor: (object.estado ? '#c57d56' : '#FCFD95'),
                                 ...styles.button
                             }}
-                            onPress={handlePrestar}>
-                            <Text>Prestar</Text>
+                            onPress={object.estado ? () => handlePrestar() : () => setModalDevolver(true)}>
+                            <Text>{object.estado ? "Prestar" : "Devolver"}</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
             </View>
+            
+            {/* Para eliminacion */}
+            <ModalConfirmation
+                visible={modalEliminar}
+                onCancel={() => setModalEliminar(false)}
+                onConfirm={() => {
+                    setModalEliminar(false)
+                    handleClose()
+                    handleEliminar(object.id)
+                }}
+                title={"Confirmar Eliminación"}
+                text={"¿Estás seguro de que deseas eliminar este objeto?, no se eliminaran los prestamos realcionados"}
+            />
+
+            {/* Para devolucion */}
+            <ModalConfirmation
+                visible={modalDevolver}
+                onCancel={() => setModalDevolver(false)}
+                onConfirm={() => {
+                    
+                    returnPrestamo(object).then(() => {
+                        setModalDevolver(false)
+                        handleClose()
+
+                    })
+                }}
+                title={"Confirmar Devolucion"}
+                text={"¿Estás seguro de que deseas devolver esta objeto?"}
+            />
         </Modal>
     );
 };

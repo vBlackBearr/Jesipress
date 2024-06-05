@@ -37,7 +37,8 @@ const FormularioObjeto = ({route, navigation}) => {
         const nuevoObjeto = {
             nombre,
             codigo: qrCode,
-            estado: true
+            estado: true,
+            status: true
         };
 
         try {

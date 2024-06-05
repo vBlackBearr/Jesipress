@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, Modal, StyleSheet, TouchableOpacity } from 'react-native';
 
-const ModalConfirmacion = ({ visible, onCancel, onConfirm }) => {
+const ModalConfirmacion = ({ visible, onCancel, onConfirm, title, text }) => {
     return (
         <Modal
             animationType="slide"
@@ -11,8 +11,8 @@ const ModalConfirmacion = ({ visible, onCancel, onConfirm }) => {
         >
             <View style={styles.modalContainer}>
                 <View style={styles.modalContent}>
-                    <Text style={styles.titulo}>Confirmar Eliminación</Text>
-                    <Text style={styles.mensaje}>¿Estás seguro de que deseas eliminar este préstamo?</Text>
+                    <Text style={styles.titulo}>{title}</Text>
+                    <Text style={styles.mensaje}>{text}</Text>
                     <View style={styles.botonesContainer}>
                         <TouchableOpacity onPress={onCancel}>
                             <Text style={styles.botonCancelar}>Cancelar</Text>

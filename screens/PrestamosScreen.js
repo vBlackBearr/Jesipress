@@ -107,6 +107,8 @@ const ListaPrestamos = ({ navigation }) => {
                 visible={modalVisible}
                 onCancel={() => setModalVisible(false)}
                 onConfirm={confirmarEliminacion}
+                title={"Confirmar Eliminación"}
+                text={"¿Estás seguro de que deseas eliminar este préstamo?"}
             />
         </View>
     );

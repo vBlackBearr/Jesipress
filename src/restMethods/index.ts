@@ -11,23 +11,27 @@ import db from '../database/firebase'
 export const getAllObjetos = async () => {
     try {
         const objetosCol = collection(db, 'objetos');
-        const citySnapshot = await getDocs(objetosCol);
-        const cityList = citySnapshot.docs.map(doc => {
+        const q = query(objetosCol, where('status', '==', true));
+        const querySnapshot = await getDocs(q);
+        const objetosList = querySnapshot.docs.map(doc => {
             const data = doc.data();
             data.id = doc.id;
             return data;
         });
-        return cityList;
+        return objetosList;
     } catch (error) {
         console.error('Error en la solicitud GET de objetos:', error);
         throw error;
     }
 };
 
+
 export const getObjetoByCode = async (codigo) => {
     try {
         const objetosCol = collection(db, 'objetos');
-        const querySnapshot = await getDocs(query(objetosCol, where('codigo', '==', codigo)));
+        const q = query(objetosCol, where('codigo', '==', codigo), where('status', '==', true));
+        const querySnapshot = await getDocs(q);
+
         if (querySnapshot.empty) {
             throw new Error('No se encontró ningún objeto con el código proporcionado.');
         }
@@ -43,8 +47,7 @@ export const getObjetoByCode = async (codigo) => {
     }
 };
 
-
-export const getObjetoById  = async (objetoId): Promise<object> => {
+export const getObjetoById = async (objetoId): Promise<object> => {
     try {
         const objetoRef = doc(db, 'objetos', objetoId);
         const objetoDoc = await getDoc(objetoRef);
@@ -103,7 +106,7 @@ export const updateObjetoById = async (objetoId, objetoData) => {
 export const deleteObjetoById = async (objetoId) => {
     try {
         const objetoRef = doc(db, 'objetos', objetoId);
-        await deleteDoc(objetoRef);
+        await updateDoc(objetoRef, { status: false });
         return true;
     } catch (error) {
         console.error('Error al eliminar el objeto:', error);
@@ -266,3 +269,37 @@ export const deletePrestamoById = async (prestamoId) => {
         throw error;
     }
 };
+
+
+export const returnPrestamo = async (objeto_data) => {
+
+    //Caso en el que el objeto este prestado y se este devolviendo
+    getPrestamoById(objeto_data.prestamo_id).then((prestamo_data) => {
+
+        //Se hace el prestamo.devuelto = true
+        const { id: id_prestamo, ...prestamoSinId } = prestamo_data
+        const newPrestamo = {
+            ...prestamoSinId,
+            devuelto: true
+        }
+        updatePrestamoById(prestamo_data.id, newPrestamo).then(() => {
+
+            //Se hace el objeto.estado = true
+            objeto_data.estado = true
+            const { id: id_objeto, ...objetoSinId } = objeto_data
+            // alert(Object.entries(objetoSinId))
+            const newObjeto = {
+                ...objetoSinId,
+                prestamo_id: ""
+            }
+            updateObjetoById(objeto_data.id, newObjeto).then(() => {
+
+                //Se termino el proceso de devolucion 
+                alert(`Devolucion exitosa!`);
+                // navigation.navigate('HomeScreen')
+            })
+        })
+    })
+
+
+}
