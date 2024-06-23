@@ -95,12 +95,10 @@ export default function CameraScreen({ handleBarCodeScanned: externalHandleBarCo
         <View style={styles.viewInferior}>
           <View style={styles.flashView} onPress={() => { toogleFlashState() }}>
             <Icon
-              name={flashState ? 'flash-off' : 'flash'}
-              type='ionicon'
-              color='#000'
+              name={flashState ? 'flashlight-off' : 'flashlight'}
+              type='material-community'
+              color='rgba(255,255,255, 0.3)'
               size={50}
-              underlayColor={'#8d8989'}
-              reverse={flashState}
               onPress={() => { toogleFlashState() }}
             />
           </View>
@@ -136,13 +134,13 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '25%',
     display: 'flex',
-    justifyContent: 'flex-end',
-    alignItems: 'flex-end'
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   flashView: {
-    height: 90,
-    width: 90,
-    backgroundColor: '#8d8989',
+    height: 80,
+    width: 80,
+    backgroundColor: 'rgba(50,50,50, 0.6)',
     position: 'relative',
     end: 1,
     direction: 'rtl',

@@ -148,7 +148,7 @@ const ObjectModal = ({ visible, object, handleClose, navigation, createMode = fa
         ]).start();
     }
 
-    
+
 
 
     const handleScanCode = () => {
@@ -358,7 +358,7 @@ const ObjectModal = ({ visible, object, handleClose, navigation, createMode = fa
 
                         ) : (
                             <View>
-                                <TouchableOpacity onPress={() => handleCrearObjeto()} style={[styles.button, {borderColor: "green", padding: 20}]}>
+                                <TouchableOpacity onPress={() => handleCrearObjeto()} style={[styles.button, { borderColor: "green", padding: 20 }]}>
                                     <Text style={{ fontWeight: 'bold', fontSize: 20, color: 'green' }}>Guardar</Text>
                                 </TouchableOpacity>
                             </View>

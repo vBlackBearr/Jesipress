@@ -48,9 +48,9 @@ const App = () => {
         <DataProvider>
             <NavigationContainer>
                 <Stack.Navigator initialRouteName="StartScreen">
-                    <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ title: "Jesipress", headerStyle: { backgroundColor: 'papayawhip' } }} />
+                    <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ title: "Jesipress", headerStyle: { backgroundColor: 'papayawhip' }, headerLeft: ()=> null, animationEnabled: false}} />
                     <Stack.Screen name="ScanCredencial" component={ScanCredencial} options={{ headerShown: false }} />
-                    <Stack.Screen name="StartScreen" component={StartScreen} options={{ title: "", headerStyle: { backgroundColor: 'papayawhip' } }} />
+                    <Stack.Screen name="StartScreen" component={StartScreen} options={{ title: "", headerStyle: { backgroundColor: 'papayawhip' }}} />
                 </Stack.Navigator>
             </NavigationContainer>
         </DataProvider>
