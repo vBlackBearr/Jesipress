@@ -1,4 +1,4 @@
-import { getObjetoByCode, getObjetoById, updateObjetoById } from "../src/restMethods";
+import { getObjetoById, updateObjetoById } from "../src/restMethods";
 import CameraScreen from "./cameraScreen";
 import { createPrestamo } from "../src/restMethods";
 import React, { useState } from 'react';
@@ -48,7 +48,7 @@ export default function ScanCredencial({ route, navigation }) {
             })
         });
         alert(`Registro Exitoso con el numero de control: ${data}`);
-        navigation.navigate('HomeScreen');
+        navigation.navigate('HomeScreen', {focus: true});
 
     }
 

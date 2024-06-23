@@ -32,6 +32,12 @@
         {
           "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
         }
+      ],
+      [
+        "expo-font",
+        {
+          "fonts": ["./assets/fonts/baskerville-old-face.ttf"]
+        }
       ]
     ]
   }

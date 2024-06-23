@@ -33,7 +33,8 @@ export const getObjetoByCode = async (codigo) => {
         const querySnapshot = await getDocs(q);
 
         if (querySnapshot.empty) {
-            throw new Error('No se encontró ningún objeto con el código proporcionado.');
+            console.log('No existe ningún objeto con el código proporcionado:', codigo);
+            return null;
         }
 
         const objeto = querySnapshot.docs[0].data();
@@ -274,7 +275,7 @@ export const deletePrestamoById = async (prestamoId) => {
 export const returnPrestamo = async (objeto_data) => {
 
     //Caso en el que el objeto este prestado y se este devolviendo
-    getPrestamoById(objeto_data.prestamo_id).then((prestamo_data) => {
+    await getPrestamoById(objeto_data.prestamo_id).then(async (prestamo_data) => {
 
         //Se hace el prestamo.devuelto = true
         const { id: id_prestamo, ...prestamoSinId } = prestamo_data
@@ -282,7 +283,7 @@ export const returnPrestamo = async (objeto_data) => {
             ...prestamoSinId,
             devuelto: true
         }
-        updatePrestamoById(prestamo_data.id, newPrestamo).then(() => {
+        await updatePrestamoById(prestamo_data.id, newPrestamo).then( async () => {
 
             //Se hace el objeto.estado = true
             objeto_data.estado = true
@@ -292,7 +293,7 @@ export const returnPrestamo = async (objeto_data) => {
                 ...objetoSinId,
                 prestamo_id: ""
             }
-            updateObjetoById(objeto_data.id, newObjeto).then(() => {
+            await updateObjetoById(objeto_data.id, newObjeto).then(() => {
 
                 //Se termino el proceso de devolucion 
                 alert(`Devolucion exitosa!`);

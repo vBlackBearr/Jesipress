@@ -1,15 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { FlatList, StyleSheet, Text, TouchableOpacity, View, Modal, TextInput } from 'react-native';
 import { deleteObjetoById, getAllObjetos, getObjetoById } from "../src/restMethods";
 import { FAB } from 'react-native-paper';
 import ObjectModal from "../src/modals/ObjectModal";
+import { useFocusEffect } from '@react-navigation/native';
 
-export const ObjetosScreen = ({ navigation }) => {
+export const ObjetosScreen = ({ navigation, router }) => {
     const [objetos, setObjetos] = useState([]);
     const [mensaje, setMensaje] = useState('');
 
     const [modalVisibility, setModalVisibility] = useState(false);
-    const [selectedObject, setSelectedObject] = useState(null); // Cambié el valor inicial a null
+    const [selectedObject, setSelectedObject] = useState(null);
+    const [createMode, setCreateMode] = useState(false)
+
+    const [modalNewObject, setModalNewObject] = useState(false)
+    const [newName, setNewName] = useState("")
+    const textInputRefNewName = useRef(null);
 
     const cargarObjetos = () => {
         getAllObjetos()
@@ -40,18 +46,40 @@ export const ObjetosScreen = ({ navigation }) => {
 
     useEffect(() => {
         cargarObjetos();
+        // alert("Cargando objetos...");
     }, [modalVisibility]);
 
+    useEffect(() => {
+        setNewName("")
+        if (modalNewObject) {
+            textInputRefNewName.current.focus();
+        }
+    }, [modalNewObject]);
 
     useEffect(() => {
-        return navigation.addListener('focus', () => {
-            cargarObjetos();
-        });
+        // alert("Cargando objetos...");
+
     }, [navigation]);
 
+    useEffect(() => {
+        // alert("Cargando objetos por el stack navigation...");
+
+    }, [router?.params.focus]);
+
+    useFocusEffect(
+        React.useCallback(() => {
+            cargarObjetos();
+
+            return () => {
+                // cleanup function here if needed
+            };
+        }, [])
+    );
+
     const handleAgregarObjeto = () => {
-        navigation.navigate('FormularioObjeto');
-    };    
+        setModalNewObject(true)
+        // navigation.navigate('FormularioObjeto');
+    };
 
     // const handleEditar = async (objetoId) => {
     //     getObjetoById(objetoId).then((response) => {
@@ -70,6 +98,9 @@ export const ObjetosScreen = ({ navigation }) => {
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => {
                     const handleDetailsButton = () => {
+
+                        //Hacemos el create mode a false para asegurarnos de que es modo de detalles
+                        setCreateMode(false);
                         setSelectedObject(item);
                         setModalVisibility(true);
                     };
@@ -109,16 +140,57 @@ export const ObjetosScreen = ({ navigation }) => {
                 style={styles.fab}
                 icon="plus"
                 onPress={handleAgregarObjeto}
+                color='green'
             />
 
-            {selectedObject && (
-                <ObjectModal
-                    visible={modalVisibility}
-                    object={selectedObject}
-                    handleClose={() => setModalVisibility(false)}
-                    navigation={navigation}
-                />
-            )}
+
+            <ObjectModal
+                visible={modalVisibility}
+                object={selectedObject}
+                handleClose={() => setModalVisibility(false)}
+                navigation={navigation}
+                createMode={createMode}
+            />
+
+            {/* Modal para Nuevo nombre para creacion de nuevo objeto */}
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalNewObject}
+                onRequestClose={() => setModalNewObject(false)}
+            >
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                        <Text style={styles.titulo}>Ingresa el nombre del Nuevo Objeto</Text>
+                        <TextInput
+                            style={{ width: '100%', height: 50, borderColor: 'gray', borderWidth: 1, marginBottom: 10, fontSize: 16 }}
+                            value={newName}
+                            onChangeText={(e) => { setNewName(e) }}
+                            ref={textInputRefNewName} />
+                        <View style={styles.botonesContainer}>
+                            <TouchableOpacity onPress={() => {
+                                setModalNewObject(false)
+                                setNewName("")
+                            }}>
+                                <Text style={styles.botonCancelar}>Cancelar</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => {
+                                setModalNewObject(false)
+                                const newObj = {
+                                    nombre: newName
+                                }
+                                setSelectedObject(newObj)
+                                setModalNewObject(false)
+                                setCreateMode(true);
+                                setModalVisibility(true);
+                            }}>
+                                <Text style={styles.botonAceptar}>Aceptar</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
+
         </View>
     );
 };
@@ -163,6 +235,38 @@ const styles = StyleSheet.create({
         margin: 16,
         right: 0,
         bottom: 0,
-        backgroundColor: 'green',
+        backgroundColor: 'white',
+        borderColor: 'green',
+        borderWidth: 3,
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalContent: {
+        width: 300,
+        backgroundColor: 'white',
+        borderRadius: 8,
+        padding: 16,
+        alignItems: 'flex-start'
+    },
+    titulo: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginBottom: 8,
+        zIndex: 1
+    }, botonesContainer: {
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+    }, botonCancelar: {
+        color: 'red',
+        fontSize: 16,
+        marginRight: 16,
+    },
+    botonAceptar: {
+        color: 'green',
+        fontSize: 16,
     },
 });
