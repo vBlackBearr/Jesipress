@@ -9,6 +9,7 @@ import ScanCredencial from './ScanCredencial';
 import StartScreen from './StartScreen';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { Icon } from 'react-native-elements';
+import { DataProvider } from '../src/providers/DataProvider';
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -44,13 +45,15 @@ const Stack = createStackNavigator();
 const App = () => {
 
     return (
-        <NavigationContainer>
-            <Stack.Navigator initialRouteName="StartScreen">
-                <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ title: "Jesipress", headerStyle: { backgroundColor: 'papayawhip' } }} />
-                <Stack.Screen name="ScanCredencial" component={ScanCredencial} options={{ headerShown: false }} />
-                <Stack.Screen name="StartScreen" component={StartScreen} options={{ title: "", headerStyle: { backgroundColor: 'papayawhip' } }} />
-            </Stack.Navigator>
-        </NavigationContainer>
+        <DataProvider>
+            <NavigationContainer>
+                <Stack.Navigator initialRouteName="StartScreen">
+                    <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ title: "Jesipress", headerStyle: { backgroundColor: 'papayawhip' } }} />
+                    <Stack.Screen name="ScanCredencial" component={ScanCredencial} options={{ headerShown: false }} />
+                    <Stack.Screen name="StartScreen" component={StartScreen} options={{ title: "", headerStyle: { backgroundColor: 'papayawhip' } }} />
+                </Stack.Navigator>
+            </NavigationContainer>
+        </DataProvider>
     );
 };
 

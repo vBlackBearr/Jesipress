@@ -1,11 +1,14 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useContext } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View, Modal, TextInput } from 'react-native';
-import { deleteObjetoById, getAllObjetos, getObjetoById, getPrestamoById } from "../src/restMethods";
+import { DataContext } from "../src/providers/DataProvider";
 import { FAB } from 'react-native-paper';
 import ObjectModal from "../src/modals/ObjectModal";
 import { useFocusEffect } from '@react-navigation/native';
 
 export const ObjetosScreen = ({ navigation, router }) => {
+
+    const { getAllObjetos, getPrestamoById } = useContext(DataContext);
+
     const [objetos, setObjetos] = useState([]);
     const [mensaje, setMensaje] = useState('');
 

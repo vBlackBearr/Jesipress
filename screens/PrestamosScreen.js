@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import axios from 'axios';
 import ModalConfirmation from '../src/modals/ModalConfirmation';
-import { deletePrestamoById, getAllPrestamos, getObjetoById } from "../src/restMethods";
+import { DataContext } from "../src/providers/DataProvider";
 
 const ListaPrestamos = ({ navigation }) => {
+
+    const { getAllPrestamos, getObjetoById, deletePrestamoById } = useContext(DataContext);
+
     const [prestamos, setPrestamos] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [prestamoSeleccionado, setPrestamoSeleccionado] = useState(null);

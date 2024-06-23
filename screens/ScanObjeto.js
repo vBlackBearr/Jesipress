@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { getObjetoByCode, getPrestamoById, updatePrestamoById, updateObjetoById, returnPrestamo } from "../src/restMethods";
+import { useEffect, useContext } from "react";
+import { DataContext } from "../src/providers/DataProvider";
 import CameraScreen from "./cameraScreen";
 import ObjectModal from "../src/modals/ObjectModal";
 import { useState } from 'react'
@@ -7,16 +7,18 @@ import { useState } from 'react'
 
 export default function ScanObjeto({ navigation }) {
 
+    const { getObjetoByCode } = useContext(DataContext);
+
     const [modalVisibility, setModalVisibility] = useState(false)
     const [scannedObject, setScannedObject] = useState({})
 
     const handleBarCodeScanned = ({ data }) => {
         getObjetoByCode(data).then((objeto_data) => {
-            
+
             if (objeto_data != null) {
                 setScannedObject(objeto_data)
                 setModalVisibility(true)
-            }else{
+            } else {
                 alert(`Objeto no encontrado!`);
             }
 

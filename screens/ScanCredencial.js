@@ -1,12 +1,14 @@
-import { getObjetoById, updateObjetoById } from "../src/restMethods";
+import { getObjetoById, updateObjetoById } from "../src/providers/DataProvider";
 import CameraScreen from "./cameraScreen";
-import { createPrestamo } from "../src/restMethods";
-import React, { useState } from 'react';
+import { DataContext } from "../src/providers/DataProvider";
+import React, { useState, useContext } from 'react';
 import Modal from 'react-native-modal';
 import { Text, View, TouchableOpacity } from 'react-native';
 const { format } = require('date-fns');
 
 export default function ScanCredencial({ route, navigation }) {
+
+    const { createPrestamo } = useContext(DataContext);
 
     const [isModalVisible, setModalVisible] = useState(false);
     const [mensaje, setMensaje] = useState('');
@@ -49,7 +51,6 @@ export default function ScanCredencial({ route, navigation }) {
         });
         alert(`Registro Exitoso con el numero de control: ${data}`);
         navigation.navigate('HomeScreen', {focus: true});
-
     }
 
     return (
