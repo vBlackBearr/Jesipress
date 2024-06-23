@@ -14,9 +14,6 @@ export default function CameraScreen({ handleBarCodeScanned: externalHandleBarCo
 
   const [permission, requestPermission] = useCameraPermissions();
 
-  //Se debe de mandar en los parametros forsozamente el metodo
-  // const { handleBarCodeScanned } = route.params
-
   if (!permission) {
     // Camera permissions are still loading.
     return <View />;
@@ -25,7 +22,12 @@ export default function CameraScreen({ handleBarCodeScanned: externalHandleBarCo
   if (!permission.granted) {
     // Camera permissions are not granted yet.
     return (
-      <View style={styles.container}>
+      <View style={{
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}>
         <Text style={{ textAlign: 'center' }}>We need your permission to show the camera</Text>
         <Button onPress={requestPermission} title="grant permission" />
       </View>
@@ -45,13 +47,12 @@ export default function CameraScreen({ handleBarCodeScanned: externalHandleBarCo
     <View style={styles.container}>
 
       <CameraView style={styles.cameraView} enableTorch={flashState}
-        // barcodeType
         barcodeScannerSettings={{
           barcodeTypes: [...barcodeTypes],
         }}
         onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}>
-        
-        
+
+
         {!barcodeTypes.includes("qr") ? (
           <View style={styles.viewSuperior}>
             <Icon
@@ -67,7 +68,7 @@ export default function CameraScreen({ handleBarCodeScanned: externalHandleBarCo
         ) : (<></>)}
         <View style={{
           width: '100%',
-          height: (barcodeTypes.includes("qr")?"70%":"50%"),
+          height: (barcodeTypes.includes("qr") ? "70%" : "50%"),
           justifyContent: "space-between"
         }}>
           <View style={styles.textContainer}>
@@ -115,7 +116,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'flex-end'
+    alignItems: 'center'
   },
   cameraView: {
     height: '100%',

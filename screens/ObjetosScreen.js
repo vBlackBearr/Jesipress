@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View, Modal, TextInput } from 'react-native';
-import { deleteObjetoById, getAllObjetos, getObjetoById } from "../src/restMethods";
+import { deleteObjetoById, getAllObjetos, getObjetoById, getPrestamoById } from "../src/restMethods";
 import { FAB } from 'react-native-paper';
 import ObjectModal from "../src/modals/ObjectModal";
 import { useFocusEffect } from '@react-navigation/native';
@@ -35,8 +35,8 @@ export const ObjetosScreen = ({ navigation, router }) => {
                 const resolvedObjetos = await Promise.all(promises);
                 setObjetos(resolvedObjetos);
             })
-            .catch(() => {
-                console.log('Error obteniendo todos los objetos');
+            .catch((e) => {
+                console.log('Error obteniendo todos los objetos', e);
             });
     };
 
@@ -66,29 +66,9 @@ export const ObjetosScreen = ({ navigation, router }) => {
 
     }, [router?.params.focus]);
 
-    useFocusEffect(
-        React.useCallback(() => {
-            cargarObjetos();
-
-            return () => {
-                // cleanup function here if needed
-            };
-        }, [])
-    );
-
     const handleAgregarObjeto = () => {
         setModalNewObject(true)
-        // navigation.navigate('FormularioObjeto');
     };
-
-    // const handleEditar = async (objetoId) => {
-    //     getObjetoById(objetoId).then((response) => {
-    //         setModalVisibility(false)
-    //         navigation.navigate('FormularioObjeto', { objetoParaEditar: response });
-    //     }).catch((error) => {
-    //         console.error('Error al editar el objeto:', error);
-    //     });
-    // };
 
     return (
         <View style={styles.container}>

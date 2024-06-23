@@ -1,5 +1,4 @@
-import axios from 'axios';
-import { format } from "date-fns";
+
 import { collection, getDocs, getDoc, updateDoc, doc, deleteDoc, addDoc, setDoc, query, where } from 'firebase/firestore/lite';
 import db from '../database/firebase'
 
@@ -90,18 +89,6 @@ export const updateObjetoById = async (objetoId, objetoData) => {
         throw error;
     }
 };
-
-
-
-// export const setObjetoDevuelto = async (objetoId) => {
-//     try {
-//         const response = await axios.put(`${OBJETOS_API_BASE_URL}/${objetoId}`, datosActualizados);
-//         return response.data;
-//     } catch (error) {
-//         console.error('Error en la solicitud PUT de objeto por ID:', error);
-//         throw error;
-//     }
-// };
 
 
 export const deleteObjetoById = async (objetoId) => {
@@ -218,47 +205,6 @@ export const updatePrestamoById = async (prestamoId, prestamoData) => {
     }
 };
 
-// export const registroDevolucionPrestamo = async (codigoObj, data) => {
-//     try {
-//         const response = await axios.put(`${PRESTAMOS_API_BASE_URL}/devolucion/${codigoObj}`, data);
-//         return response.data;
-//     } catch (error) {
-//         console.error('Error en la solicitud PUT de devolucion de préstamo:', error);
-//         throw error;
-//     }
-// }
-
-/*
-export const llegadaPrestamoById = async (objetoId ) => {
-    try {
-        getObjetoByCode(objetoId).then((response) => {
-            getPrestamoById(response.indice_on_prestamo).then((response2) => {
-                response2.hora_devolucion = Date();
-                response2.hora_devolucion = format(new Date(), 'yyyy-MM-dd HH:mm:ss');
-                updatePrestamoById(response2.id,response2).then(() => {
-                    response.estado = 1;
-                    response.indice_on_prestamo = null;
-                    updateObjetoById(response.id, response).then((response3) => {
-                    }).catch((error) => {+
-                        console.error(error);
-                    });
-                }).catch((error) => {
-                    console.error(error);
-                })
-            }).catch((error) => {
-                console.error(error);
-            })
-
-            return response.data;
-        }).catch((error) => {
-
-        });
-
-    } catch (error) {
-        console.error('Error en la solicitud PUT de préstamo por ID:', error);
-        throw error;
-    }
-};*/
 
 export const deletePrestamoById = async (prestamoId) => {
     try {
@@ -301,6 +247,5 @@ export const returnPrestamo = async (objeto_data) => {
             })
         })
     })
-
 
 }

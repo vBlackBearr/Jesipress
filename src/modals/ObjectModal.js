@@ -7,9 +7,7 @@ import QRCode from 'react-native-qrcode-svg';
 import ModalConfirmation from './ModalConfirmation'
 import { CameraView } from 'expo-camera';
 import QrCodeGenerator from '../utilities/QrCodeGenerator';
-import * as FileSystem from 'expo-file-system'
-import { shareAsync } from 'expo-sharing'
-// import RNFS from "react-native-fs"
+import saveQRCode from '../utilities/ExportQr'
 
 const ObjectModal = ({ visible, object, handleClose, navigation, createMode = false }) => {
 
@@ -148,13 +146,8 @@ const ObjectModal = ({ visible, object, handleClose, navigation, createMode = fa
         ]).start();
     }
 
-    const saveQRCode = () => {
-        this.svg.toDataURL((data) => {
-            FileSystem.writeAsStringAsync(FileSystem.cacheDirectory + "/qr.png", data, { encoding: FileSystem.EncodingType.Base64 }).then(() => {
-                shareAsync(FileSystem.cacheDirectory + "/qr.png", { mimeType: 'image/png', dialogTitle: 'Compartir QR' })
-            })
-        })
-    }
+    
+
 
     const handleScanCode = () => {
         toogleShownEditCodeButtons()
@@ -277,7 +270,7 @@ const ObjectModal = ({ visible, object, handleClose, navigation, createMode = fa
                             <View style={{ width: '100%', marginBottom: 15, display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                                 <Text>Codigo: </Text>
                                 <Icon name="pencil" type="material-community" onPress={() => toogleShownEditCodeButtons()} />
-                                <Icon name="export-variant" type="material-community" onPress={() => saveQRCode()} />
+                                <Icon name="export-variant" type="material-community" onPress={() => saveQRCode(this)} />
                             </View>
 
                             <Animated.View style={{ transform: [{ translateY: slideAnim }], opacity: opacityAnim, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: '100%', gap: 10 }}>

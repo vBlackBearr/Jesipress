@@ -3,9 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { ObjetosScreen } from "./ObjetosScreen";
-import FormularioObjeto from "./FormularioObjeto";
 import PrestamosScreen from "./PrestamosScreen";
-import CameraCodeRegisterScreen from "./CameraCodeRegisterScreen";
 import ScanObjeto from './ScanObjeto';
 import ScanCredencial from './ScanCredencial';
 import StartScreen from './StartScreen';
@@ -15,15 +13,6 @@ import { Icon } from 'react-native-elements';
 const Tab = createMaterialBottomTabNavigator();
 
 const HomeScreen = ({ navigation, router }) => {
-
-    // useEffect(() => {
-    //     alert("Bienvenido a Jesipress")
-    // }, [navigation]);
-
-    // navigation.setOptions({
-    //     headerLeft: null,
-    //   });
-
 
     return (
 
@@ -54,20 +43,14 @@ const Stack = createStackNavigator();
 
 const App = () => {
 
-
-
     return (
-
         <NavigationContainer>
             <Stack.Navigator initialRouteName="StartScreen">
                 <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ title: "Jesipress", headerStyle: { backgroundColor: 'papayawhip' } }} />
-                <Stack.Screen name="FormularioObjeto" component={FormularioObjeto} options={{ title: "Jesipress", headerStyle: { backgroundColor: 'papayawhip' } }}/>
                 <Stack.Screen name="ScanCredencial" component={ScanCredencial} options={{ headerShown: false }} />
-                <Stack.Screen name="CameraCodeRegisterScreen" component={CameraCodeRegisterScreen} />
-                <Stack.Screen name="StartScreen" component={StartScreen} options={{ title: "", headerStyle: { backgroundColor: 'papayawhip' } }}/>
+                <Stack.Screen name="StartScreen" component={StartScreen} options={{ title: "", headerStyle: { backgroundColor: 'papayawhip' } }} />
             </Stack.Navigator>
         </NavigationContainer>
-
     );
 };
 
