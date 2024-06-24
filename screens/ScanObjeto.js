@@ -1,5 +1,5 @@
 import { useEffect, useContext } from "react";
-import { DataContext } from "../src/providers/DataProvider";
+import { DataContext } from "../src/contexts/DataContext";
 import CameraScreen from "./cameraScreen";
 import ObjectModal from "../src/modals/ObjectModal";
 import { useState } from 'react'

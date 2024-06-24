@@ -9,7 +9,8 @@ import ScanCredencial from './ScanCredencial';
 import StartScreen from './StartScreen';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { Icon } from 'react-native-elements';
-import { DataProvider } from '../src/providers/DataProvider';
+import { DataProvider } from '../src/contexts/DataContext';
+import { LoaderProvider, useLoader } from '../src/contexts/LoaderContext';
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -45,17 +46,21 @@ const Stack = createStackNavigator();
 const App = () => {
 
     return (
-        <DataProvider>
-            <NavigationContainer>
-                <Stack.Navigator initialRouteName="StartScreen">
-                    <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ title: "Jesipress", headerStyle: { backgroundColor: 'papayawhip' }, headerLeft: ()=> null, animationEnabled: false}} />
-                    <Stack.Screen name="ScanCredencial" component={ScanCredencial} options={{ headerShown: false }} />
-                    <Stack.Screen name="StartScreen" component={StartScreen} options={{ title: "", headerStyle: { backgroundColor: 'papayawhip' }}} />
-                </Stack.Navigator>
-            </NavigationContainer>
-        </DataProvider>
+        <LoaderProvider>
+            <DataProvider>
+                <NavigationContainer>
+                    <Stack.Navigator initialRouteName="StartScreen">
+                        <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ title: "Jesipress", headerStyle: { backgroundColor: 'papayawhip' }, headerLeft: () => null, animationEnabled: false }} />
+                        <Stack.Screen name="ScanCredencial" component={ScanCredencial} options={{ headerShown: false }} />
+                        <Stack.Screen name="StartScreen" component={StartScreen} options={{ title: "", headerStyle: { backgroundColor: 'papayawhip' } }} />
+                    </Stack.Navigator>
+                </NavigationContainer>
+            </DataProvider>
+        </LoaderProvider >
     );
 };
+
+
 
 const styles = StyleSheet.create({
     container: {

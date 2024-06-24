@@ -1,6 +1,6 @@
-import { getObjetoById, updateObjetoById } from "../src/providers/DataProvider";
+import { getObjetoById, updateObjetoById } from "../src/contexts/DataContext";
 import CameraScreen from "./cameraScreen";
-import { DataContext } from "../src/providers/DataProvider";
+import { DataContext } from "../src/contexts/DataContext";
 import React, { useState, useContext } from 'react';
 import Modal from 'react-native-modal';
 import { Text, View, TouchableOpacity } from 'react-native';

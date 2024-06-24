@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useContext } from 'react';
 import { View, Text, Modal, StyleSheet, TouchableOpacity, TextInput, Keyboard, Animated } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { Divider } from '@rneui/themed';
-import { DataContext } from '../providers/DataProvider';
+import { DataContext } from '../contexts/DataContext';
 import QRCode from 'react-native-qrcode-svg';
 import ModalConfirmation from './ModalConfirmation'
 import { CameraView } from 'expo-camera';

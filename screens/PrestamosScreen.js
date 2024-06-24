@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import ModalConfirmation from '../src/modals/ModalConfirmation';
-import { DataContext } from "../src/providers/DataProvider";
+import { DataContext } from "../src/contexts/DataContext";
+import { useLoader } from '../src/contexts/LoaderContext';
 
 const ListaPrestamos = ({ navigation }) => {
 
@@ -11,18 +12,17 @@ const ListaPrestamos = ({ navigation }) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [prestamoSeleccionado, setPrestamoSeleccionado] = useState(null);
 
-    useEffect(() => {
-        return navigation.addListener('focus', () => {
-            cargarPrestamos();
-        });
-        
-    }, [navigation]);
+    const { showLoader, hideLoader } = useLoader();
+
+
+    // useEffect(()  
 
     useEffect(() => {
         cargarPrestamos()
     }, []);
 
     const cargarPrestamos = () => {
+        showLoader();
         getAllPrestamos()
             .then(async (response) => {
                 // Crear una copia de los préstamos para trabajar con ellos
@@ -55,6 +55,8 @@ const ListaPrestamos = ({ navigation }) => {
             })
             .catch((error) => {
                 console.error('Error al obtener la lista de préstamos:', error);
+            }).finally(() => {
+                hideLoader();
             });
     };
     

@@ -21,7 +21,12 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "jesipress.Package"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -36,7 +41,9 @@
       [
         "expo-font",
         {
-          "fonts": ["./assets/fonts/baskerville-old-face.ttf"]
+          "fonts": [
+            "./assets/fonts/baskerville-old-face.ttf"
+          ]
         }
       ]
     ]

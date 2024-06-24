@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useRef, useContext } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View, Modal, TextInput } from 'react-native';
-import { DataContext } from "../src/providers/DataProvider";
+import { DataContext } from "../src/contexts/DataContext";
 import { FAB } from 'react-native-paper';
 import ObjectModal from "../src/modals/ObjectModal";
 import { useFocusEffect } from '@react-navigation/native';
+import { useLoader } from '../src/contexts/LoaderContext';
 
 export const ObjetosScreen = ({ navigation, router }) => {
 
@@ -20,7 +21,13 @@ export const ObjetosScreen = ({ navigation, router }) => {
     const [newName, setNewName] = useState("")
     const textInputRefNewName = useRef(null);
 
+    const { showLoader, hideLoader } = useLoader();
+
+    
+
     const cargarObjetos = () => {
+        
+        showLoader();
         getAllObjetos()
             .then(async (response) => {
                 setObjetos(response);
@@ -40,11 +47,19 @@ export const ObjetosScreen = ({ navigation, router }) => {
             })
             .catch((e) => {
                 console.log('Error obteniendo todos los objetos', e);
+            }).finally(() => {
+                // alert("Cargando objetos...");
+                // Loader.hideLoader();
+                hideLoader();
             });
     };
 
+    const Loader = undefined
+
     useEffect(() => {
         cargarObjetos();
+
+        
     }, []);
 
     useEffect(() => {
